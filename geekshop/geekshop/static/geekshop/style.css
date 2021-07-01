@@ -266,6 +266,19 @@ html, body {
 	width: 270px;
 	position: relative;
 }
+
+.product_img_cat {
+    height: 370px;
+    width: 370px;
+}
+
+.index_img_cat {
+    height: 270px;
+    width: 270px;
+}
+
+
+
 .tab-content a .text {
 	display: none;
 	height: 268px;
@@ -971,6 +984,7 @@ td:first-child {
 }
 
 
+
 .description-text {
 	margin-top: 50px;
 	color:  #212121;
@@ -1045,3 +1059,5 @@ td:first-child {
 .related-products a:hover .text{
 	display: block;
 }
+
+
