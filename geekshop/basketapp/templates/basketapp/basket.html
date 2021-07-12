@@ -1,31 +1,18 @@
-{% extends 'geekshop/base.html' %}
+{% extends 'base.html' %}
 {% load static %}
 
+{% block js %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="{% static 'basketapp/js/script.js' %}"></script>
+{% endblock %}
+
 {% block content %}
+    <div class="slider" style="height: 550px">
+    {% include 'includes/inc_main_menu.html' %}
+        <h2 style="margin-top: 50px">КОРЗИНА </h2>
     {% if user.is_authenticated %}
-        <div class="container">
-            <div class="row">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Продукт</th>
-                  <th scope="col">Количестов</th>
-                </tr>
-              </thead>
-              <tbody>
-              {% for item in basket %}
-                  <tr>
-                      <th scope="row">{{ forloop.counter }}</th>
-                      <td>{{ item.product }}</td>
-                      <td>{{ item.quantity }}</td>
-                  </tr>
-              {% endfor %}
-
-
-              </tbody>
-            </table>
-            </div>
-        </div>
+        {% include 'basketapp/includes/inc_basket_list.html' %}
     {% endif %}
+    </div>
+
 {% endblock %}

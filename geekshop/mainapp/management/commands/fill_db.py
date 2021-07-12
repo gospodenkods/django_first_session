@@ -1,5 +1,5 @@
-import os
 import json
+import os
 
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
@@ -7,12 +7,11 @@ from django.core.management.base import BaseCommand
 from authapp.models import ShopUser
 from mainapp.models import ProductCategory, Product
 
-JSON_PATH = 'mainapp/jsons'
+JSON_DIR = 'mainapp/json'
 
 
 def load_from_json(file_name):
-    with open(os.path.join(JSON_PATH, file_name + '.json'), mode='r', encoding='UTF-8') as infile:
-
+    with open(os.path.join(JSON_DIR, file_name + '.json'), mode='r', encoding='UTF-8') as infile:
         return json.load(infile)
 
 
@@ -27,12 +26,9 @@ class Command(BaseCommand):
 
         products = load_from_json('products')
 
-        Product.objects.all().delete()
         for product in products:
-            category_name = product['category']
-            _category = ProductCategory.objects.get(name=category_name)
-            product['category'] = _category
-            new_category = Product(**product)
-            new_category.save()
+            product['category'] = ProductCategory.objects.get(name=product['category'])
+            new_product = Product(**product)
+            new_product.save()
 
-        super_user = ShopUser.objects.create_superuser('admin', 'admin@geekshop.local', '123', age='30')
+        ShopUser.objects.create_superuser(username='admin', password='admin', age=37)
