@@ -16,6 +16,7 @@ class ProductCategory(models.Model):
         blank=True,
     )
     href = models.CharField(
+        verbose_name='адрес(ссылка)',
         max_length=64,
         unique=True,
         blank=True,
@@ -27,6 +28,11 @@ class ProductCategory(models.Model):
 
     updated = models.DateTimeField(
         auto_now=True,
+    )
+
+    is_deleted = models.BooleanField(
+        default=False,
+        verbose_name='удалена',
     )
 
     def __str__(self):
@@ -82,6 +88,8 @@ class Product(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
+
+    is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name or f'Product with id - {self.pk}'
