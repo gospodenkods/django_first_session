@@ -29,3 +29,8 @@
 	height: 370px;
 }
 
+.pagination {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+}
