@@ -5,8 +5,10 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserEditForm
+from authapp.forms import ShopUserProfileEditForm
 from authapp.models import ShopUser
 from geekshop import settings
+from django.db import transaction
 
 
 def send_verify_email(user):
@@ -39,11 +41,13 @@ def login(request):
     title = 'Вход в магазин'
     login_form = ShopUserLoginForm(data=request.POST)
     _next = request.GET['next'] if 'next' in request.GET.keys() else ''
-    if request.POST and login_form.is_valid():
+    #if request.POST and login_form.is_valid():
+    if request.method == 'POST' and login_form.is_valid():
         username = request.POST['username']
         password = request.POST['password']
         user = auth.authenticate(username=username, password=password)
         if user and user.is_active:
+            auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             auth.login(request, user)
             if 'next' in request.POST.keys():
                 return HttpResponseRedirect(request.POST['next'])
@@ -83,17 +87,24 @@ def register(request):
     return render(request, 'authapp/register.html', context)
 
 
+@transaction.atomic
 def edit(request):
-    title = 'редактирование'
+    title = 'СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёРµ'
+
     if request.method == 'POST':
         edit_form = ShopUserEditForm(request.POST, request.FILES, instance=request.user)
-        if edit_form.is_valid():
+        profile_form = ShopUserProfileEditForm(request.POST, instance=request.user.shopuserprofile)
+        if edit_form.is_valid() and profile_form.is_valid():
             edit_form.save()
             return HttpResponseRedirect(reverse('auth:edit'))
     else:
         edit_form = ShopUserEditForm(instance=request.user)
+        profile_form = ShopUserProfileEditForm(instance=request.user.shopuserprofile)
+
     context = {
         'title': title,
-        'edit_form': edit_form
+        'edit_form': edit_form,
+        'profile_form': profile_form,
     }
+
     return render(request, 'authapp/edit.html', context)
